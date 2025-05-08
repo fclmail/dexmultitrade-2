@@ -1,272 +1,273 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Polygon Arbitrage Bot</title>
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
-  <style>
-    body {
-      background-color: #0d1b2a;
-      color: #ffffff;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .card {
-      background-color: #1b263b;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    input, select, button {
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 5px;
-      border: none;
-    }
-    button {
-      background-color: #415a77;
-      color: white;
-      cursor: pointer;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ffffff33;
-      padding: 8px;
-      text-align: center;
-    }
-    .green { color: #00ff99; }
-    .red { color: #ff6666; }
-  </style>
-</head>
-<body>
 
-  <h1>Polygon Arbitrage Bot</h1>
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+  <meta charset="UTF-8">  
+  <title>Polygon Arbitrage Bot</title>  
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>  
+  <style>  
+    body {  
+      background-color: #0d1b2a;  
+      color: #ffffff;  
+      font-family: Arial, sans-serif;  
+      padding: 20px;  
+    }  
+    .card {  
+      background-color: #1b263b;  
+      border-radius: 10px;  
+      padding: 20px;  
+      margin-bottom: 20px;  
+    }  
+    input, select, button {  
+      margin: 5px 0;  
+      padding: 10px;  
+      border-radius: 5px;  
+      border: none;  
+    }  
+    button {  
+      background-color: #415a77;  
+      color: white;  
+      cursor: pointer;  
+    }  
+    table {  
+      width: 100%;  
+      border-collapse: collapse;  
+      margin-top: 10px;  
+    }  
+    th, td {  
+      border: 1px solid #ffffff33;  
+      padding: 8px;  
+      text-align: center;  
+    }  
+    .green { color: #00ff99; }  
+    .red { color: #ff6666; }  
+  </style>  
+</head>  
+<body>  
 
-  <div class="card">
-    <button onclick="connectWallet()">Connect MetaMask</button>
-    <p><strong>Wallet:</strong> <span id="walletAddress">Not connected</span></p>
-    <p><strong>USDC Balance:</strong> <span id="usdcBalance">0</span></p>
-    <p><strong>Token Balance:</strong> <span id="tokenBalance">N/A</span></p>
-  </div>
+  <h1>Polygon Arbitrage Bot</h1>  
 
-  <div class="card">
-    <label>ERC20 Token Address:</label>
-    <input type="text" id="tokenAddress" placeholder="0x...">
+  <div class="card">  
+    <button onclick="connectWallet()">Connect MetaMask</button>  
+    <p><strong>Wallet:</strong> <span id="walletAddress">Not connected</span></p>  
+    <p><strong>USDC Balance:</strong> <span id="usdcBalance">0</span></p>  
+    <p><strong>Token Balance:</strong> <span id="tokenBalance">N/A</span></p>  
+  </div>  
 
-    <label>Quantity in USDC:</label>
-    <input type="number" id="usdcAmount" placeholder="Amount to trade">
+  <div class="card">  
+    <label>ERC20 Token Address:</label>  
+    <input type="text" id="tokenAddress" placeholder="0x...">  
 
-    <label>Buy Router:</label>
-    <select id="buyRouter">
-      <option value="QuickSwap">QuickSwap</option>
-      <option value="SushiSwap">SushiSwap</option>
-      <option value="ApeSwap">ApeSwap</option>
-      <option value="Dfyn">Dfyn</option>
-      <option value="WaultSwap">WaultSwap</option>
-      <option value="Polycat">Polycat</option>
-      <option value="CafeSwap">CafeSwap</option>
-    </select>
+    <label>Quantity in USDC:</label>  
+    <input type="number" id="usdcAmount" placeholder="Amount to trade">  
 
-    <label>Sell Router:</label>
-    <select id="sellRouter">
-      <option value="QuickSwap">QuickSwap</option>
-      <option value="SushiSwap">SushiSwap</option>
-      <option value="ApeSwap">ApeSwap</option>
-      <option value="Dfyn">Dfyn</option>
-      <option value="WaultSwap">WaultSwap</option>
-      <option value="Polycat">Polycat</option>
-      <option value="CafeSwap">CafeSwap</option>
-    </select>
+    <label>Buy Router:</label>  
+    <select id="buyRouter">  
+      <option value="QuickSwap">QuickSwap</option>  
+      <option value="SushiSwap">SushiSwap</option>  
+      <option value="ApeSwap">ApeSwap</option>  
+      <option value="Dfyn">Dfyn</option>  
+      <option value="WaultSwap">WaultSwap</option>  
+      <option value="Polycat">Polycat</option>  
+      <option value="CafeSwap">CafeSwap</option>  
+    </select>  
 
-    <label>
-      <input type="checkbox" id="profitOnlyToggle" checked> Trade only if profitable
-    </label><br>
+    <label>Sell Router:</label>  
+    <select id="sellRouter">  
+      <option value="QuickSwap">QuickSwap</option>  
+      <option value="SushiSwap">SushiSwap</option>  
+      <option value="ApeSwap">ApeSwap</option>  
+      <option value="Dfyn">Dfyn</option>  
+      <option value="WaultSwap">WaultSwap</option>  
+      <option value="Polycat">Polycat</option>  
+      <option value="CafeSwap">CafeSwap</option>  
+    </select>  
 
-    <button onclick="startTrading()">Start</button>
-    <button onclick="stopTrading()">Stop</button>
-  </div>
+    <label>  
+      <input type="checkbox" id="profitOnlyToggle" checked> Trade only if profitable  
+    </label><br>  
 
-  <div class="card">
-    <h3>Transaction Log</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Token</th>
-          <th>Buy Router</th>
-          <th>Sell Router</th>
-          <th>USDC In</th>
-          <th>USDC Out</th>
-          <th>Est. Profit</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="logBody">
-        <!-- Results go here -->
-      </tbody>
-    </table>
-  </div>
+    <button onclick="startTrading()">Start</button>  
+    <button onclick="stopTrading()">Stop</button>  
+  </div>  
 
-<script>
-const routers = {
-  QuickSwap: "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
-  SushiSwap: "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
-  ApeSwap: "0xC0788A3aD43d79aa53B09c2EaCc313A787d1d607",
-  Dfyn: "0xA102072A4C07F06EC3B4900FDC4C7B80b6c57429",
-  WaultSwap: "0x3a1D87f206D12415f5b0A33E786967680AAb4f6d",
-  Polycat: "0x94930a328162957FF1dd48900aF67B5439336cBD",
-  CafeSwap: "0x9055682E58C74fc8DdBFC55Ad2428aB1F96098Fc"
-};
+  <div class="card">  
+    <h3>Transaction Log</h3>  
+    <table>  
+      <thead>  
+        <tr>  
+          <th>#</th>  
+          <th>Token</th>  
+          <th>Buy Router</th>  
+          <th>Sell Router</th>  
+          <th>USDC In</th>  
+          <th>USDC Out</th>  
+          <th>Est. Profit/Loss</th>  
+          <th>Status</th>  
+        </tr>  
+      </thead>  
+      <tbody id="logBody">  
+        <!-- Results go here -->  
+      </tbody>  
+    </table>  
+  </div>  
 
-let provider, signer, userAddress, intervalId;
-let txCount = 0;
-const usdcAddress = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174";
-const erc20Abi = [
-  "function balanceOf(address) view returns (uint256)",
-  "function decimals() view returns (uint8)",
-  "function symbol() view returns (string)",
-  "function approve(address spender, uint256 amount) returns (bool)",
-  "function allowance(address owner, address spender) view returns (uint256)"
-];
+<script>  
+const routers = {  
+  QuickSwap: "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",  
+  SushiSwap: "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",  
+  ApeSwap: "0xC0788A3aD43d79aa53B09c2EaCc313A787d1d607",  
+  Dfyn: "0xA102072A4C07F06EC3B4900FDC4C7B80b6c57429",  
+  WaultSwap: "0x3a1D87f206D12415f5b0A33E786967680AAb4f6d",  
+  Polycat: "0x94930a328162957FF1dd48900aF67B5439336cBD",  
+  CafeSwap: "0x9055682E58C74fc8DdBFC55Ad2428aB1F96098Fc"  
+};  
 
-async function connectWallet() {
-  provider = new ethers.BrowserProvider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
-  signer = await provider.getSigner();
-  userAddress = await signer.getAddress();
-  document.getElementById("walletAddress").innerText = userAddress;
-  updateUSDCBalance();
-  updateTokenBalance(); // Show token balance too
-}
+let provider, signer, userAddress, intervalId;  
+let txCount = 0;  
+const usdcAddress = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174";  
+const erc20Abi = [  
+  "function balanceOf(address) view returns (uint256)",  
+  "function decimals() view returns (uint8)",  
+  "function symbol() view returns (string)",  
+  "function approve(address spender, uint256 amount) returns (bool)",  
+  "function allowance(address owner, address spender) view returns (uint256)"  
+];  
 
-async function updateUSDCBalance() {
-  const usdc = new ethers.Contract(usdcAddress, erc20Abi, provider);
-  const decimals = await usdc.decimals();
-  const balance = await usdc.balanceOf(userAddress);
-  const divisor = BigInt(10) ** BigInt(decimals);
-  const balanceFloat = Number(balance) / Number(divisor);
-  document.getElementById("usdcBalance").innerText = balanceFloat.toFixed(5);
-}
+async function connectWallet() {  
+  provider = new ethers.BrowserProvider(window.ethereum);  
+  await provider.send("eth_requestAccounts", []);  
+  signer = await provider.getSigner();  
+  userAddress = await signer.getAddress();  
+  document.getElementById("walletAddress").innerText = userAddress;  
+  updateUSDCBalance();  
+  updateTokenBalance(); // Show token balance too  
+}  
 
-async function updateTokenBalance() {
-  const tokenAddress = document.getElementById("tokenAddress").value.trim();
-  if (!ethers.isAddress(tokenAddress)) {
-    document.getElementById("tokenBalance").innerText = "N/A";
-    return;
-  }
+async function updateUSDCBalance() {  
+  const usdc = new ethers.Contract(usdcAddress, erc20Abi, provider);  
+  const decimals = await usdc.decimals();  
+  const balance = await usdc.balanceOf(userAddress);  
+  const divisor = BigInt(10) ** BigInt(decimals);  
+  const balanceFloat = Number(balance) / Number(divisor);  
+  document.getElementById("usdcBalance").innerText = balanceFloat.toFixed(5);  
+}  
 
-  try {
-    const token = new ethers.Contract(tokenAddress, erc20Abi, provider);
-    const decimals = await token.decimals();
-    const symbol = await token.symbol();
-    const balance = await token.balanceOf(userAddress);
-    const divisor = BigInt(10) ** BigInt(decimals);
-    const balanceFloat = Number(balance) / Number(divisor);
-    document.getElementById("tokenBalance").innerText = `${balanceFloat.toFixed(5)} ${symbol}`;
-  } catch (err) {
-    console.error("Token balance error:", err);
-    document.getElementById("tokenBalance").innerText = "N/A";
-  }
-}
+async function updateTokenBalance() {  
+  const tokenAddress = document.getElementById("tokenAddress").value.trim();  
+  if (!ethers.isAddress(tokenAddress)) {  
+    document.getElementById("tokenBalance").innerText = "N/A";  
+    return;  
+  }  
 
-function startTrading() {
-  if (intervalId) return;
-  intervalId = setInterval(runArbitrage, 10000);
-}
+  try {  
+    const token = new ethers.Contract(tokenAddress, erc20Abi, provider);  
+    const decimals = await token.decimals();  
+    const symbol = await token.symbol();  
+    const balance = await token.balanceOf(userAddress);  
+    const divisor = BigInt(10) ** BigInt(decimals);  
+    const balanceFloat = Number(balance) / Number(divisor);  
+    document.getElementById("tokenBalance").innerText = `${balanceFloat.toFixed(5)} ${symbol}`;  
+  } catch (err) {  
+    console.error("Token balance error:", err);  
+    document.getElementById("tokenBalance").innerText = "N/A";  
+  }  
+}  
 
-function stopTrading() {
-  clearInterval(intervalId);
-  intervalId = null;
-}
+function startTrading() {  
+  if (intervalId) return;  
+  intervalId = setInterval(runArbitrage, 10000);  
+}  
 
-async function approveIfNeeded(tokenAddress, spender, amount) {
-  const token = new ethers.Contract(tokenAddress, erc20Abi, signer);
-  const allowance = await token.allowance(userAddress, spender);
-  if (allowance < amount) {
-    const tx = await token.approve(spender, ethers.MaxUint256);
-    await tx.wait();
-  }
-}
+function stopTrading() {  
+  clearInterval(intervalId);  
+  intervalId = null;  
+}  
 
-async function runArbitrage() {
-  const tokenAddress = document.getElementById("tokenAddress").value.trim();
-  const usdcAmount = parseFloat(document.getElementById("usdcAmount").value);
-  const buyRouterName = document.getElementById("buyRouter").value;
-  const sellRouterName = document.getElementById("sellRouter").value;
-  const profitOnly = document.getElementById("profitOnlyToggle").checked;
+async function approveIfNeeded(tokenAddress, spender, amount) {  
+  const token = new ethers.Contract(tokenAddress, erc20Abi, signer);  
+  const allowance = await token.allowance(userAddress, spender);  
+  if (allowance < amount) {  
+    const tx = await token.approve(spender, ethers.MaxUint256);  
+    await tx.wait();  
+  }  
+}  
 
-  if (!tokenAddress || !usdcAmount || !buyRouterName || !sellRouterName) return;
+async function runArbitrage() {  
+  const tokenAddress = document.getElementById("tokenAddress").value.trim();  
+  const usdcAmount = parseFloat(document.getElementById("usdcAmount").value);  
+  const buyRouterName = document.getElementById("buyRouter").value;  
+  const sellRouterName = document.getElementById("sellRouter").value;  
+  const profitOnly = document.getElementById("profitOnlyToggle").checked;  
 
-  const buyRouter = new ethers.Contract(routers[buyRouterName], ["function getAmountsOut(uint,address[]) view returns (uint[])","function swapExactTokensForTokens(uint,uint,address[],address,uint)"], signer);
-  const sellRouter = new ethers.Contract(routers[sellRouterName], ["function getAmountsOut(uint,address[]) view returns (uint[])","function swapExactTokensForTokens(uint,uint,address[],address,uint)"], signer);
+  if (!tokenAddress || !usdcAmount || !buyRouterName || !sellRouterName) return;  
 
-  const usdc = new ethers.Contract(usdcAddress, erc20Abi, provider);
-  const token = new ethers.Contract(tokenAddress, erc20Abi, provider);
-  const usdcDec = await usdc.decimals();
-  const tokenDec = await token.decimals();
-  const tokenSym = await token.symbol();
+  const buyRouter = new ethers.Contract(routers[buyRouterName], ["function getAmountsOut(uint,address[]) view returns (uint[])","function swapExactTokensForTokens(uint,uint,address[],address,uint)"], signer);  
+  const sellRouter = new ethers.Contract(routers[sellRouterName], ["function getAmountsOut(uint,address[]) view returns (uint[])","function swapExactTokensForTokens(uint,uint,address[],address,uint)"], signer);  
 
-  const amountIn = ethers.parseUnits(usdcAmount.toString(), usdcDec);
-  const buyPath = [usdcAddress, tokenAddress];
-  const sellPath = [tokenAddress, usdcAddress];
+  const usdc = new ethers.Contract(usdcAddress, erc20Abi, provider);  
+  const token = new ethers.Contract(tokenAddress, erc20Abi, provider);  
+  const usdcDec = await usdc.decimals();  
+  const tokenDec = await token.decimals();  
+  const tokenSym = await token.symbol();  
 
-  try {
-    const estTokenOut = await buyRouter.getAmountsOut(amountIn, buyPath);
-    const tokenOut = estTokenOut[1];
-    const estUsdcOut = await sellRouter.getAmountsOut(tokenOut, sellPath);
-    const usdcOut = estUsdcOut[1];
-    const profit = (usdcOut - amountIn) / BigInt(10 ** usdcDec);
+  const amountIn = ethers.parseUnits(usdcAmount.toString(), usdcDec);  
+  const buyPath = [usdcAddress, tokenAddress];  
+  const sellPath = [tokenAddress, usdcAddress];  
 
-    if (profitOnly && profit <= 0) {
-      logRow(tokenSym, buyRouterName, sellRouterName, usdcAmount, (Number(usdcOut) / 10**usdcDec).toFixed(4), profit.toFixed(4), "Skipped (No profit)", "red");
-      return;
-    }
+  try {  
+    const estTokenOut = await buyRouter.getAmountsOut(amountIn, buyPath);  
+    const tokenOut = estTokenOut[1];  
+    const estUsdcOut = await sellRouter.getAmountsOut(tokenOut, sellPath);  
+    const usdcOut = estUsdcOut[1];  
 
-    if (profit > 0) {
-      alert(`Profitable Trade Found!\nProfit: $${profit.toFixed(4)}`);
-    }
+    const profit = (usdcOut - amountIn) / BigInt(10 ** usdcDec); // Profit as BigInt  
+    const profitNumber = Number(profit); // Convert to Number for logging and display  
 
-    await approveIfNeeded(usdcAddress, routers[buyRouterName], amountIn);
-    const buyTx = await buyRouter.swapExactTokensForTokens(amountIn, 0, buyPath, userAddress, BigInt(Math.floor(Date.now() / 1000) + 60));
-    await buyTx.wait();
+    // Log the transaction details  
+    logRow(tokenSym, buyRouterName, sellRouterName, usdcAmount, (Number(usdcOut) / 10 ** usdcDec).toFixed(4), profitNumber.toFixed(4), profitNumber > 0 ? "Success ✅" : "Skipped (No profit)", profitNumber > 0 ? "green" : "red");  
 
-    await new Promise(r => setTimeout(r, 10000));
+    // If trading only when profitable and it isn't profitable, exit  
+    if (profitOnly && profitNumber <= 0) {  
+      return;  
+    }  
 
-    const tokenBal = await new ethers.Contract(tokenAddress, erc20Abi, provider).balanceOf(userAddress);
-    await approveIfNeeded(tokenAddress, routers[sellRouterName], tokenBal);
+    await approveIfNeeded(usdcAddress, routers[buyRouterName], amountIn);  
+    const buyTx = await buyRouter.swapExactTokensForTokens(amountIn, 0, buyPath, userAddress, BigInt(Math.floor(Date.now() / 1000) + 60));  
+    await buyTx.wait();  
 
-    const sellTx = await sellRouter.swapExactTokensForTokens(tokenBal, 0, sellPath, userAddress, BigInt(Math.floor(Date.now() / 1000) + 60));
-    await sellTx.wait();
+    await new Promise(r => setTimeout(r, 10000));  
 
-    logRow(tokenSym, buyRouterName, sellRouterName, usdcAmount, (Number(usdcOut) / 10**usdcDec).toFixed(4), profit.toFixed(4), "Success ✅", "green");
-    updateUSDCBalance();
-    updateTokenBalance();
-  } catch (err) {
-    console.error(err);
-    logRow(tokenSym, buyRouterName, sellRouterName, usdcAmount, "-", "-", `Error: ${err.message}`, "red");
-  }
-}
+    const tokenBal = await token.balanceOf(userAddress);  
+    await approveIfNeeded(tokenAddress, routers[sellRouterName], tokenBal);  
 
-function logRow(token, buy, sell, usdcIn, usdcOut, profit, status, className) {
-  txCount++;
-  const row = `
-    <tr class="${className}">
-      <td>${txCount}</td>
-      <td>${token}</td>
-      <td>${buy}</td>
-      <td>${sell}</td>
-      <td>${usdcIn}</td>
-      <td>${usdcOut}</td>
-      <td>${profit}</td>
-      <td>${status}</td>
-    </tr>`;
-  document.getElementById("logBody").insertAdjacentHTML("afterbegin", row);
-}
-</script>
+    const sellTx = await sellRouter.swapExactTokensForTokens(tokenBal, 0, sellPath, userAddress, BigInt(Math.floor(Date.now() / 1000) + 60));  
+    await sellTx.wait();  
 
-</body>
+    updateUSDCBalance();  
+    updateTokenBalance();  
+  } catch (err) {  
+    console.error(err);  
+    logRow(tokenSym, buyRouterName, sellRouterName, usdcAmount, "-", "-", `Error: ${err.message}`, "red");  
+  }  
+}  
+
+function logRow(token, buy, sell, usdcIn, usdcOut, profit, status, className) {  
+  txCount++;  
+  const row = `  
+    <tr class="${className}">  
+      <td>${txCount}</td>  
+      <td>${token}</td>  
+      <td>${buy}</td>  
+      <td>${sell}</td>  
+      <td>${usdcIn}</td>  
+      <td>${usdcOut}</td>  
+      <td>${profit}</td>  
+      <td>${status}</td>  
+    </tr>`;  
+  document.getElementById("logBody").insertAdjacentHTML("afterbegin", row);  
+}  
+</script>  
+
+</body>  
 </html>
